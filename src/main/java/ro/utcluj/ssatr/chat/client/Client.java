@@ -61,9 +61,11 @@ public class Client extends JFrame {
     }
 
     private void connectToServer() throws IOException {
-        showMessage("\n *** ATTEMPTING CONNECTION... ***");
+        showMessage("\n *** ATTEMPTING CONNECTION... ***\n");
         connection = new Socket(InetAddress.getByName(serverIp), PORT_NUMBER);
-        showMessage("\n *** CONNECTED TO " + connection.getInetAddress().getHostName().toUpperCase() + "***");
+        showMessage("\n *** CONNECTED TO " 
+                + connection.getInetAddress().getHostName().toUpperCase() 
+                + "***");
 
     }
 
@@ -77,13 +79,14 @@ public class Client extends JFrame {
     }
 
     private void whileChatting() throws IOException {
-
+        String message = "\nYou are now connected to the server!\n";
+        showMessage(message);
         ableToType(true);
         do {
             try {
                 message = (String) input.readObject();
-                if (message != null && !message.equals("")) {
-                    sendData("\n" + message);
+                if (message != null && !message.isEmpty()) {
+                    showMessage(message);
                 }
 
             } catch (ClassNotFoundException ex) {
@@ -95,16 +98,19 @@ public class Client extends JFrame {
 
     //send messages to server
     private void sendData(String msg) {
-        try {
-            //output.writeObject("CLIENT - " + msg);
+        String message = "\nCLIENT - " + msg;
+        if(!msg.isEmpty()){
+             try {
+            output.writeObject(message);
             output.flush();
-            if (message != null && !message.isEmpty()) {
-                showMessage("\n CLIENT - " + msg);
-            }
+            showMessage(message);
+            
         } catch (IOException ex) {
             ex.printStackTrace();
             chatWindow.append("\n ERROR: Message could not be sent!");
         }
+        }
+       
     }
 
     //update chat window with message
